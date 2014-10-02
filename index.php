@@ -13,23 +13,23 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
     // check for tag type
     if ($tag == 'login') {
         // Request type is check Login
-        $email = $_POST['email'];
+        $user = $_POST['usuario'];
         $password = $_POST['password'];
-        // check for user
-        $user = $db->getUserByEmailAndPassword($email, $password);
-        if ($user != false) {
-            // user found
+        // check for cuenta
+        $cuenta = $db->validarUsuario($user, $password);
+        if ($cuenta != false) {
+            // cuenta found
             // echo json with success = 1
             $response["success"] = 1;
-            $response["user"]["fname"] = $user["firstname"];
-            $response["user"]["lname"] = $user["lastname"];
-            $response["user"]["email"] = $user["email"];
-      $response["user"]["uname"] = $user["username"];
-            $response["user"]["uid"] = $user["unique_id"];
-            $response["user"]["created_at"] = $user["created_at"];
+            $response["cuenta"]["telefono"] = $cuenta["telefono"];
+            $response["cuenta"]["imei"] = $cuenta["imei"];
+            $response["cuenta"]["fecha_server"] = $cuenta["fechahora_server"];
+            $response["cuenta"]["saldo"] = $cuenta["saldo"];
+            $response["cuenta"]["uid"] = $cuenta["UID"];
+            $response["cuenta"]["fecha_trans"] = $cuenta["fechahora_trans"];
             echo json_encode($response);
         } else {
-            // user not found
+            // cuenta not found
             // echo json with error = 1
             $response["error"] = 1;
             $response["error_msg"] = "Incorrect email or password!";
@@ -43,12 +43,12 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
         $encrypted_password = $hash["encrypted"]; // encrypted password
         $salt = $hash["salt"];
   $subject = "Change Password Notification";
-         $message = "Hello User,nnYour Password is sucessfully changed.nnRegards,nLearn2Crack Team.";
+         $message = "Hello cuenta,nnYour Password is sucessfully changed.nnRegards,nLearn2Crack Team.";
           $from = "contact@learn2crack.com";
           $headers = "From:" . $from;
-  if ($db->isUserExisted($email)) {
- $user = $db->forgotPassword($email, $encrypted_password, $salt);
-if ($user) {
+  if ($db->iscuentaExisted($email)) {
+ $cuenta = $db->forgotPassword($email, $encrypted_password, $salt);
+if ($cuenta) {
          $response["success"] = 1;
           mail($email,$subject,$message,$headers);
          echo json_encode($response);
@@ -57,11 +57,11 @@ else {
 $response["error"] = 1;
 echo json_encode($response);
 }
-            // user is already existed - error response
+            // cuenta is already existed - error response
         }
            else {
             $response["error"] = 2;
-            $response["error_msg"] = "User not exist";
+            $response["error_msg"] = "cuenta not exist";
              echo json_encode($response);
 }
 }
@@ -72,12 +72,12 @@ $hash = $db->hashSSHA($randomcode);
         $encrypted_password = $hash["encrypted"]; // encrypted password
         $salt = $hash["salt"];
   $subject = "Password Recovery";
-         $message = "Hello User,nnYour Password is sucessfully changed. Your new Password is $randomcode . Login with your new Password and change it in the User Panel.nnRegards,nLearn2Crack Team.";
+         $message = "Hello cuenta,nnYour Password is sucessfully changed. Your new Password is $randomcode . Login with your new Password and change it in the cuenta Panel.nnRegards,nLearn2Crack Team.";
           $from = "contact@learn2crack.com";
           $headers = "From:" . $from;
-  if ($db->isUserExisted($forgotpassword)) {
- $user = $db->forgotPassword($forgotpassword, $encrypted_password, $salt);
-if ($user) {
+  if ($db->iscuentaExisted($forgotpassword)) {
+ $cuenta = $db->forgotPassword($forgotpassword, $encrypted_password, $salt);
+if ($cuenta) {
          $response["success"] = 1;
           mail($forgotpassword,$subject,$message,$headers);
          echo json_encode($response);
@@ -86,16 +86,16 @@ else {
 $response["error"] = 1;
 echo json_encode($response);
 }
-            // user is already existed - error response
+            // cuenta is already existed - error response
         }
            else {
             $response["error"] = 2;
-            $response["error_msg"] = "User not exist";
+            $response["error_msg"] = "cuenta not exist";
              echo json_encode($response);
 }
 }
 else if ($tag == 'register') {
-        // Request type is Register new user
+        // Request type is Register new cuenta
         $fname = $_POST['fname'];
     $lname = $_POST['lname'];
         $email = $_POST['email'];
@@ -105,11 +105,11 @@ else if ($tag == 'register') {
          $message = "Hello $fname,nnYou have sucessfully registered to our service.nnRegards,nAdmin.";
           $from = "contact@learn2crack.com";
           $headers = "From:" . $from;
-        // check if user is already existed
-        if ($db->isUserExisted($email)) {
-            // user is already existed - error response
+        // check if cuenta is already existed
+        if ($db->iscuentaExisted($email)) {
+            // cuenta is already existed - error response
             $response["error"] = 2;
-            $response["error_msg"] = "User already existed";
+            $response["error_msg"] = "cuenta already existed";
             echo json_encode($response);
         }
            else if(!$db->validEmail($email)){
@@ -118,21 +118,21 @@ else if ($tag == 'register') {
             echo json_encode($response);
 }
 else {
-            // store user
-            $user = $db->storeUser($fname, $lname, $email, $uname, $password);
-            if ($user) {
-                // user stored successfully
+            // store cuenta
+            $cuenta = $db->storecuenta($fname, $lname, $email, $uname, $password);
+            if ($cuenta) {
+                // cuenta stored successfully
             $response["success"] = 1;
-            $response["user"]["fname"] = $user["firstname"];
-            $response["user"]["lname"] = $user["lastname"];
-            $response["user"]["email"] = $user["email"];
-      $response["user"]["uname"] = $user["username"];
-            $response["user"]["uid"] = $user["unique_id"];
-            $response["user"]["created_at"] = $user["created_at"];
+            $response["cuenta"]["fname"] = $cuenta["firstname"];
+            $response["cuenta"]["lname"] = $cuenta["lastname"];
+            $response["cuenta"]["email"] = $cuenta["email"];
+            $response["cuenta"]["uname"] = $cuenta["cuentaname"];
+            $response["cuenta"]["uid"] = $cuenta["unique_id"];
+            $response["cuenta"]["created_at"] = $cuenta["created_at"];
                mail($email,$subject,$message,$headers);
                 echo json_encode($response);
             } else {
-                // user failed to store
+                // cuenta failed to store
                 $response["error"] = 1;
                 $response["error_msg"] = "JSON Error occured in Registartion";
                 echo json_encode($response);
