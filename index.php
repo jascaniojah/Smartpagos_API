@@ -144,6 +144,6 @@ else {
         echo json_encode($response);
     }
 } else {
-    echo "Learn2Crack Login API";
+    echo "Smartpagos Webservice by HispanoSoluciones";
 }
 ?>
