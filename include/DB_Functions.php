@@ -64,26 +64,53 @@ return false;
     /**
      * Verifies user by email and password
      */
-    public function validarUsuario($usuario, $password) {
+    public function validarUsuario($usuario, $password,$imei) {
       
-        $result = mysql_query("SELECT * FROM cuenta WHERE usuario = '$usuario'") or die(mysql_error());
+        $result = mysql_query("SELECT * FROM cuenta WHERE usuario = '$usuario'");
+        if(!$result)
+        {
+		return constant("DB_ERROR");
+			
+		}
+        
         // check for result
         $no_of_rows = mysql_num_rows($result);
+        
         if ($no_of_rows > 0) {
             $result = mysql_fetch_array($result);
-          //  $salt = $result['salt'];
             $encrypted_password = $result['password'];
-            /*
-            $hash = $this->checkhashSSHA($salt, $password);
-            // check for password equality*/
-           
-            if ($encrypted_password == $password) {
+			$storedImei=$result['imei'];
+			
+			
+            if ($encrypted_password == $password && $storedImei==$imei) {
+				
                 // user authentication details are correct
                 return $result;
             }
+            
+            else if($encrypted_password != $password)
+            {
+				//invalid password
+				return constant("INV_PSW");
+				
+			}
+			
+			else if($storedImei != $imei)
+            {
+				//invalid password
+				return constant("INV_IMEI");
+				
+			}
+            
+            else
+            {
+				return constant("INV_PSW");
+			}
+			
+			
         } else {
             // user not found
-            return false;
+            return constant("INV_USER");
         }
     }
  /**

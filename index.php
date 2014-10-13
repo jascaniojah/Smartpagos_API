@@ -19,11 +19,14 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
         $numero=$_POST['numero'];
         
         // check for cuenta
-        $cuenta = $db->validarUsuario($user, $password);
-        if ($cuenta != false) {
+        $cuenta = $db->validarUsuario($user,$password,$imei);
+        
+        if ($cuenta != constant("DB_ERROR")&& $cuenta != constant("INV_IMEI")&& 
+        $cuenta != constant("INV_PSW")&& $cuenta != constant("INV_USER"){
             // cuenta found
             // echo json with success = 1
             $response["success"] = 1;
+            $response["code":]=constant("000");
             $response["cuenta"]["telefono"] = $cuenta["telefono"];
             $response["cuenta"]["imei"] = $cuenta["imei"];
             $response["cuenta"]["fecha_server"] = $cuenta["fechahora_server"];
@@ -35,7 +38,8 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
             // cuenta not found
             // echo json with error = 1
             $response["error"] = 1;
-            $response["error_msg"] = "Incorrect email or password!";
+            $response["code"]=$cuenta;
+            $response["error_msg"] = "Incorrect email, password or imei";
             echo json_encode($response);
         }
     }
