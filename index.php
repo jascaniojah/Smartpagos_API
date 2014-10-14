@@ -15,6 +15,9 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
         // Request type is check Login
         $user = $_POST['usuario'];
         $password = $_POST['password'];
+        $imei=$_POST['imei'];
+        $numero=$_POST['numero'];
+        
         // check for cuenta
         $cuenta = $db->validarUsuario($user, $password);
         if ($cuenta != false) {

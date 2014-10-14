@@ -65,16 +65,19 @@ return false;
      * Verifies user by email and password
      */
     public function validarUsuario($usuario, $password) {
+      
         $result = mysql_query("SELECT * FROM cuenta WHERE usuario = '$usuario'") or die(mysql_error());
         // check for result
         $no_of_rows = mysql_num_rows($result);
         if ($no_of_rows > 0) {
             $result = mysql_fetch_array($result);
-            $salt = $result['salt'];
+          //  $salt = $result['salt'];
             $encrypted_password = $result['password'];
+            /*
             $hash = $this->checkhashSSHA($salt, $password);
-            // check for password equality
-            if ($encrypted_password == $hash) {
+            // check for password equality*/
+           
+            if ($encrypted_password == $password) {
                 // user authentication details are correct
                 return $result;
             }
