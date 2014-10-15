@@ -3,7 +3,7 @@
  PHP API for Login, Register, Changepassword, Resetpassword Requests and for Email Notifications.
  **/
 if (isset($_POST['tag']) && $_POST['tag'] != '') {
-    echo("tag enviada");
+    
     // Get tag
     $tag = $_POST['tag'];
     // Include Database handler
@@ -44,34 +44,27 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
             echo json_encode($response);
         }
     }
-  else if ($tag == 'chgpass'){
-  $email = $_POST['email'];
-  $newpassword = $_POST['newpas'];
-  $hash = $db->hashSSHA($newpassword);
-        $encrypted_password = $hash["encrypted"]; // encrypted password
-        $salt = $hash["salt"];
-  $subject = "Change Password Notification";
-         $message = "Hello cuenta,nnYour Password is sucessfully changed.nnRegards,nLearn2Crack Team.";
-          $from = "contact@learn2crack.com";
-          $headers = "From:" . $from;
-  if ($db->iscuentaExisted($email)) {
- $cuenta = $db->forgotPassword($email, $encrypted_password, $salt);
-if ($cuenta) {
-         $response["success"] = 1;
-          mail($email,$subject,$message,$headers);
-         echo json_encode($response);
-}
-else {
-$response["error"] = 1;
-echo json_encode($response);
-}
-            // cuenta is already existed - error response
+  else if ($tag == 'consulta'){
+  $imei = $_POST['imei'];
+  $user = $_POST['usuario'];
+  $cuenta = $db->getSaldo($user, $imei);
+        if ($cuenta != false) {
+            // cuenta found
+            // echo json with success = 1
+            $response["success"] = 1;
+            $response["cuenta"]["fecha_server"] = $cuenta["fechahora_server"];
+            $response["cuenta"]["fecha_trans"] = $cuenta["fechahora_trans"];
+            $response["cuenta"]["saldo"] = $cuenta["saldo"];
+            echo json_encode($response);
+        } else {
+            // cuenta not found
+            // echo json with error = 1
+            $response["error"] = 1;
+            $response["error_msg"] = "Saldo no Disponible";
+            echo json_encode($response);
         }
-           else {
-            $response["error"] = 2;
-            $response["error_msg"] = "cuenta not exist";
-             echo json_encode($response);
-}
+    
+          
 }
 else if ($tag == 'forpass'){
 $forgotpassword = $_POST['forgotpassword'];

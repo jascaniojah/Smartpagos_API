@@ -113,6 +113,22 @@ return false;
             return constant("INV_USER");
         }
     }
+
+public function getSaldo($usuario, $imei){
+    
+      $result = mysql_query("SELECT saldo, fechahora_server, fechahora_trans FROM cuenta WHERE imei = '$imei'");
+    
+    $no_of_rows = mysql_num_rows($result);
+    
+    if($no_of_rows > 0){
+      $result = mysql_fetch_array($result);
+      return $result;
+          }
+          else{
+            return false;
+          }
+    }
+
  /**
      * Checks whether the email is valid or fake
      */
