@@ -70,8 +70,8 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
   else if ($tag == 'consulta'){
   $imei = $_POST['imei'];
   $user = $_POST['usuario'];
-  $cuenta = $db->getSaldo($user, $imei);
-        if ($cuenta != false) {
+  $cuenta = $db->SaldoOperador($user, $imei);
+        if ($cuenta != constant("INV_USER") && $cuenta!=constant("DB_ERROR")) {
             // cuenta found
             // echo json with success = 1
             $response["success"] = 1;
@@ -79,15 +79,54 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
             $response["cuenta"]["fecha_trans"] = $cuenta["fechahora_trans"];
             $response["cuenta"]["saldo"] = $cuenta["saldo"];
             echo json_encode($response);
-        } else {
+        } else if($cuenta==constant("INV_USER")){
             // cuenta not found
             // echo json with error = 1
             $response["error"] = 1;
-            $response["error_msg"] = "Saldo no Disponible";
+            $response["code"]=$cuenta;
+            $response["error_msg"] = "Usuario Invalido";
             echo json_encode($response);
         }
-    
+        else if($cuenta==constant("DB_ERROR")){
+            // cuenta not found
+            // echo json with error = 1
+            $response["error"] = 1;
+            $response["code"]=$cuenta;
+            $response["error_msg"] = "Error en la Base de Datoss";
+            echo json_encode($response);
+        }
           
+}
+elseif ($tag=="recarga") {
+
+    $usuario=$_POST['usuario'];
+    $imei=$_POST['imei'];
+    $monto=$_POST['monto'];
+    $fechahora=$_POST['fechahora'];
+    $telefono=$_POST['telefono'];
+    $producto=$_POST['producto'];
+    $modo_pago=$_POST['modo_pago'];
+    $medio_pago=$_POST['medio_pago'];
+    $venta=$db->RecargaTelefono($usuario, $imei,$monto,$fechahora,$telefono,$producto,$modo_pago,$medio_pago);
+    if ($venta ==constant("INSUFFICIENT"))
+    {
+            $response["error"] = 1;
+            $response["code"]=$venta;
+            $response["error_msg"] = "Saldo Insuficiente";
+            echo json_encode($response);
+
+    }
+    else if($venta==constant("DB_ERROR"))
+    {
+        $response["error"] = 1;
+            $response["code"]=$venta;
+            $response["error_msg"] = "Error en la Base de Datos";
+            echo json_encode($response);
+        
+    }
+    
+    
+    
 }
 else if ($tag == 'forpass'){
 $forgotpassword = $_POST['forgotpassword'];

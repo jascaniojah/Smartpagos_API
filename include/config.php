@@ -17,5 +17,7 @@ define("INV_PSW","103");
 define("INV_ENC","104");
 define("INV_NUMBER","105");
 define("DB_ERROR","996");
+define("INSUFFICIENT","106");
+
 
 ?>

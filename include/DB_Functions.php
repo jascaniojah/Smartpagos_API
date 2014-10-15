@@ -64,7 +64,7 @@ return false;
     /**
      * Verifies user by email and password
      */
-    public function validarUsuario($usuario, $password,$imei) {
+    public function Login($usuario, $password,$imei) {
       
         $result = mysql_query("SELECT * FROM cuenta WHERE usuario = '$usuario'");
         if(!$result)
@@ -114,10 +114,14 @@ return false;
         }
     }
 
-public function getSaldo($usuario, $imei){
+public function  SaldoOperador($usuario, $imei){
     
       $result = mysql_query("SELECT saldo, fechahora_server, fechahora_trans FROM cuenta WHERE imei = '$imei'");
-    
+     if(!$result)
+        {
+		return constant("DB_ERROR");
+			
+		}
     $no_of_rows = mysql_num_rows($result);
     
     if($no_of_rows > 0){
@@ -125,9 +129,75 @@ public function getSaldo($usuario, $imei){
       return $result;
           }
           else{
-            return false;
+            return constant("INV_USER");
           }
     }
+    
+    public function RecargaTelefono($usuario, $imei,$monto,$fechahora,$telefono,$producto,$modo_pago,$medio_pago){
+    
+      $result = mysql_query("SELECT saldo, fechahora_server, fechahora_trans FROM cuenta WHERE imei = '$imei'");
+     if(!$result)
+        {
+		return constant("DB_ERROR");
+			
+		}
+    $no_of_rows = mysql_num_rows($result);
+    
+    if($no_of_rows > 0){
+        $result = mysql_fetch_array($result);
+        $saldo =$result['saldo'];   
+        if($saldo<$monto)
+        {
+           return constant("INSUFFICIENT");
+            
+        }
+        else
+        {
+        $sql = 'INSERT INTO venta '.
+       '(usuario, imei, monto,telefono_recarga,fecha_hora,producto,modo_pago,medio_pago) '.
+       "VALUES ( '$usuario','$imei','$monto','$telefono','$fechahora','$producto','$modo_pago','$medio_pago' )";            
+        $venta=mysql_query($sql);
+      //  $venta = mysql_fetch_array($venta);
+
+        if($venta)
+        {
+        $saldo=$saldo-$monto;
+        $sql="UPDATE cuenta SET saldo='$saldo' WHERE usuario='$usuario'";
+        echo($sql);
+        $venta=  mysql_query($sql);
+        return constant('SUCCESS');
+        
+        }
+        else
+        return constant('DB_ERROR');
+        }   
+        
+        
+        
+        
+        
+        
+        
+        
+      return $result;
+          }
+          else{
+            return constant("INV_USER");
+          }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
  /**
      * Checks whether the email is valid or fake
