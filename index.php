@@ -3,6 +3,7 @@
  PHP API for Login, Register, Changepassword, Resetpassword Requests and for Email Notifications.
  **/
 if (isset($_POST['tag']) && $_POST['tag'] != '') {
+    echo("tag enviada");
     // Get tag
     $tag = $_POST['tag'];
     // Include Database handler
@@ -22,11 +23,11 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
         $cuenta = $db->validarUsuario($user,$password,$imei);
         
         if ($cuenta != constant("DB_ERROR")&& $cuenta != constant("INV_IMEI")&& 
-        $cuenta != constant("INV_PSW")&& $cuenta != constant("INV_USER"){
+        $cuenta != constant("INV_PSW")&& $cuenta != constant("INV_USER")){
             // cuenta found
             // echo json with success = 1
             $response["success"] = 1;
-            $response["code":]=constant("000");
+            $response["code"]=constant("SUCCESS");
             $response["cuenta"]["telefono"] = $cuenta["telefono"];
             $response["cuenta"]["imei"] = $cuenta["imei"];
             $response["cuenta"]["fecha_server"] = $cuenta["fechahora_server"];
@@ -151,6 +152,6 @@ else {
         echo json_encode($response);
     }
 } else {
-    echo "Smartpagos Webservice by HispanoSoluciones";
+    echo "by HispanoSoluciones";
 }
 ?>
