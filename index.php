@@ -10,7 +10,7 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
     require_once 'include/DB_Functions.php';
     $db = new DB_Functions();
     // response Array
-    $response = array("tag" => $tag, "success" => 0, "error" => 0);
+    $response = array("tag" => $tag);
     // check for tag type
     if ($tag == 'login') {
         // Request type is check Login
@@ -24,25 +24,48 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
         
         if ($cuenta != constant("DB_ERROR")&& $cuenta != constant("INV_IMEI")&& 
         $cuenta != constant("INV_PSW")&& $cuenta != constant("INV_USER")){
-            // cuenta found
-            // echo json with success = 1
-            $response["success"] = 1;
+            $response["error"] = 0;
             $response["code"]=constant("SUCCESS");
-            $response["cuenta"]["telefono"] = $cuenta["telefono"];
-            $response["cuenta"]["imei"] = $cuenta["imei"];
-            $response["cuenta"]["fecha_server"] = $cuenta["fechahora_server"];
-            $response["cuenta"]["saldo"] = $cuenta["saldo"];
-            $response["cuenta"]["uid"] = $cuenta["UID"];
-            $response["cuenta"]["fecha_trans"] = $cuenta["fechahora_trans"];
+            $response["cuenta"]["usuario"] = $user;
+            $response["code_desc"]="Inicio de Sesion Exitoso";
+          
             echo json_encode($response);
-        } else {
+        } else if($cuenta == constant("DB_ERROR")){
             // cuenta not found
             // echo json with error = 1
             $response["error"] = 1;
             $response["code"]=$cuenta;
-            $response["error_msg"] = "Incorrect email, password or imei";
-            echo json_encode($response);
+            $response["error_msg"] = "Error en la Base de Datos";
+            echo json_encode($response);    
         }
+        
+        else if($cuenta == constant("INV_IMEI")){
+            // cuenta not found
+            // echo json with error = 1
+            $response["error"] = 1;
+            $response["code"]=$cuenta;
+            $response["error_msg"] = "Imei Invalido";
+            echo json_encode($response);    
+        }
+        
+        else if($cuenta == constant("INV_PSW")){
+            // cuenta not found
+            // echo json with error = 1
+            $response["error"] = 1;
+            $response["code"]=$cuenta;
+            $response["error_msg"] = "Password Invalido";
+            echo json_encode($response);    
+        }
+        
+        else if($cuenta == constant("INV_USER")){
+            // cuenta not found
+            // echo json with error = 1
+            $response["error"] = 1;
+            $response["code"]=$cuenta;
+            $response["error_msg"] = "Usuario Invalido";
+            echo json_encode($response);    
+        }
+        
     }
   else if ($tag == 'consulta'){
   $imei = $_POST['imei'];
