@@ -125,9 +125,77 @@ elseif ($tag=="recarga") {
         
     }
     
-    
+    else if($venta== constant("SUCCESS"))
+    {   
+            $response["error"] = 0;
+            $response["code"]=$venta;
+            $response["error_msg"] = "Transaccion Exitosa";
+            echo json_encode($response);   
+    }
     
 }
+
+elseif ($tag=="notificacion") {
+
+    $cuenta_id=$_POST['cuenta_id'];
+    $imei=$_POST['imei'];
+    $monto=$_POST['monto'];
+    $fechahora=$_POST['fechahora'];
+    $producto=$_POST['producto'];
+    $tipo_deposito=$_POST['tipo_deposito'];
+    $cuenta_origen=$_POST['cuenta_origen'];
+    $notificacion=$db->NotificarDeposito($cuenta_id, $imei,$monto,$fechahora,$tipo_deposito,$cuenta_origen);
+   
+    if($notificacion==constant("DB_ERROR"))
+    {
+        $response["error"] = 1;
+            $response["code"]=$notificacion;
+            $response["error_msg"] = "Error en la Base de Datos";
+            echo json_encode($response);
+        
+    }
+    
+    else if($notificacion== constant("SUCCESS"))
+    {   
+            $response["error"] = 0;
+            $response["code"]=$notificacion;
+            $response["error_msg"] = "Transaccion Exitosa";
+            echo json_encode($response);   
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 else if ($tag == 'forpass'){
 $forgotpassword = $_POST['forgotpassword'];
 $randomcode = $db->random_string();

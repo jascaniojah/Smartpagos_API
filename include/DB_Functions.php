@@ -163,22 +163,16 @@ public function  SaldoOperador($usuario, $imei){
         {
         $saldo=$saldo-$monto;
         $sql="UPDATE cuenta SET saldo='$saldo' WHERE usuario='$usuario'";
-        echo($sql);
         $venta=  mysql_query($sql);
+        $sql="UPDATE cuenta SET fechahora_trans='$fechahora' WHERE usuario='$usuario'";
+        $venta=  mysql_query($sql);
+
         return constant('SUCCESS');
         
         }
         else
         return constant('DB_ERROR');
-        }   
-        
-        
-        
-        
-        
-        
-        
-        
+        }  
       return $result;
           }
           else{
@@ -187,19 +181,23 @@ public function  SaldoOperador($usuario, $imei){
     }
     
     
+    public function NotificarDeposito($cuenta_id, $imei,$monto,$fechahora,$tipo_deposito,$cuenta_origen){
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
- /**
+      
+        $sql = 'INSERT INTO notificacion '.
+       '(cuenta_id, imei, monto,fechahora,tipo_deposito,cuenta_origen) '.
+       "VALUES ( '$cuenta_id','$imei','$monto','$fechahora','$tipo_deposito','$cuenta_origen' )";            
+        $notificacion=mysql_query($sql);
+      //  $venta = mysql_fetch_array($venta);
+       if($notificacion)
+        {
+        return constant('SUCCESS');
+        }
+        else
+        return constant('DB_ERROR');
+        }  
+     
+  /**
      * Checks whether the email is valid or fake
      */
 public function validEmail($email)
@@ -247,8 +245,7 @@ public function validEmail($email)
          $isValid = false;
       }
       
-      if ($isValid && !(checkdnsrr($domain,"MX") ||
- ↪checkdnsrr($domain,"A")))
+      if ($isValid && !(checkdnsrr($domain,"MX") ||checkdnsrr($domain,"A")))
       {
          // domain not found in DNS
          $isValid = false;
