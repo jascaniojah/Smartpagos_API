@@ -20,7 +20,7 @@ if (isset($_POST['tag']) && $_POST['tag'] != '') {
         $numero=$_POST['numero'];
         
         // check for cuenta
-        $cuenta = $db->validarUsuario($user,$password,$imei);
+        $cuenta = $db->Login($user,$password,$imei);
         
         if ($cuenta != constant("DB_ERROR")&& $cuenta != constant("INV_IMEI")&& 
         $cuenta != constant("INV_PSW")&& $cuenta != constant("INV_USER")){
@@ -118,7 +118,7 @@ elseif ($tag=="recarga") {
     }
     else if($venta==constant("DB_ERROR"))
     {
-        $response["error"] = 1;
+        $response["error"] = 2;
             $response["code"]=$venta;
             $response["error_msg"] = "Error en la Base de Datos";
             echo json_encode($response);
@@ -141,10 +141,10 @@ elseif ($tag=="notificacion") {
     $imei=$_POST['imei'];
     $monto=$_POST['monto'];
     $fechahora=$_POST['fechahora'];
-    $producto=$_POST['producto'];
+    $referencia=$_POST['referencia'];
     $tipo_deposito=$_POST['tipo_deposito'];
     $cuenta_origen=$_POST['cuenta_origen'];
-    $notificacion=$db->NotificarDeposito($cuenta_id, $imei,$monto,$fechahora,$tipo_deposito,$cuenta_origen);
+    $notificacion=$db->NotificarDeposito($cuenta_id, $imei,$monto,$fechahora,$tipo_deposito,$cuenta_origen,$referencia);
    
     if($notificacion==constant("DB_ERROR"))
     {

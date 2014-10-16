@@ -3,9 +3,9 @@
 * Database config variables
 */
 define("DB_HOST", "localhost");
-define("DB_USER", "root");
+define("DB_USER", "");
 define("DB_PASSWORD", "");
-define("DB_DATABASE", "smartpagos");
+define("DB_DATABASE", "");
 
 
 /* Response Code Variables*/

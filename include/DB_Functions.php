@@ -181,12 +181,12 @@ public function  SaldoOperador($usuario, $imei){
     }
     
     
-    public function NotificarDeposito($cuenta_id, $imei,$monto,$fechahora,$tipo_deposito,$cuenta_origen){
+    public function NotificarDeposito($cuenta_id, $imei,$monto,$fechahora,$tipo_deposito,$cuenta_origen,$referencia){
     
       
         $sql = 'INSERT INTO notificacion '.
-       '(cuenta_id, imei, monto,fechahora,tipo_deposito,cuenta_origen) '.
-       "VALUES ( '$cuenta_id','$imei','$monto','$fechahora','$tipo_deposito','$cuenta_origen' )";            
+       '(cuenta_id, imei, monto,fechahora,tipo_deposito,cuenta_origen,referencia) '.
+       "VALUES ( '$cuenta_id','$imei','$monto','$fechahora','$tipo_deposito','$cuenta_origen','$referencia')";            
         $notificacion=mysql_query($sql);
       //  $venta = mysql_fetch_array($venta);
        if($notificacion)
