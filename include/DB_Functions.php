@@ -196,7 +196,18 @@ public function  SaldoOperador($usuario, $imei){
         else
         return constant('DB_ERROR');
         }  
-     
+      
+      public function CargarCuentas(){
+        $result = mysql_query("SELECT * FROM cuenta_bancaria");
+
+        $no_of_rows = mysql_num_rows($result);
+    
+    if($no_of_rows > 0){
+      $result = mysql_fetch_array($result);
+      return $result;
+          }
+    
+      }
   /**
      * Checks whether the email is valid or fake
      */

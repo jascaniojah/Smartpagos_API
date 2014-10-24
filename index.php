@@ -165,6 +165,12 @@ elseif ($tag=="notificacion") {
     
 }
 
+elseif ($tag =="bancos"){
+    $cuentas_bancarias = $db ->CargarCuentas();
+    $response["bancos"]=$cuentas_bancarias;
+    echo json_encode($response); 
+}
+
 
 
 
