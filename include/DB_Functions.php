@@ -198,53 +198,110 @@ public function  SaldoOperador($usuario, $imei){
         }  
       
       public function ConsultaBancos($telefono,$servicio,$origen,$imei,$fechahora){
-        $sql="SELECT distinct banco FROM cuenta_bancaria";
+        $sql="SELECT *  FROM cuenta_bancaria GROUP BY banco";
         $result = mysql_query($sql);
         $no_of_rows = mysql_num_rows($result);
     
-    if($no_of_rows > 0){
-      $result = mysql_fetch_array($result);
-      return $result;
-          }
     
+      if($no_of_rows > 0){
+      
+      while($row = mysql_fetch_array($result))
+        {
+          if($row['banco']!=""&&$row['codigo_banco']!="")
+            $ArrayResults[] = array ( 'banco' => $row['banco'], 'codigo' => $row['codigo_banco'] );
+
+        }
+        
+            return $ArrayResults;
+
+       }
+       
+       
+       else
+       return constant('DB_ERROR');
+
       }
+          
+    
+      
        public function ConsultaProductos($telefono,$servicio,$origen,$imei,$fechahora){
-        $sql="SELECT * FROM productos";
+        $sql="SELECT *  FROM productos";
         $result = mysql_query($sql);
         $no_of_rows = mysql_num_rows($result);
     
-    if($no_of_rows > 0){
-      $result = mysql_fetch_array($result);
-      return $result;
-          }
     
+      if($no_of_rows > 0){
+      
+      while($row = mysql_fetch_array($result))
+        {
+          if($row['codigo_producto']!=""&&$row['nombre_producto']!="")
+            $ArrayResults[] = array ( 'codigo_producto' => $row['codigo_producto'], 'nombre_producto' => $row['nombre_producto'] );
+
+        }
+        
+            return $ArrayResults;
+
+       }
+       
+       
+       else
+       return constant('DB_ERROR');
+
       }
+          
       
       
       
       
         public function ConsultaCuentas($telefono,$servicio,$origen,$imei,$fechahora,$codigo_banco){
-        $sql="SELECT banco,numero_cuenta,codigo_banco FROM cuenta_bancaria where codigo_banco='".$codigo_banco."'";
+        $sql="SELECT numero_cuenta FROM cuenta_bancaria where codigo_banco='$codigo_banco'";
         $result = mysql_query($sql);
         $no_of_rows = mysql_num_rows($result);
     
     if($no_of_rows > 0){
-      $result = mysql_fetch_array($result);
-      return $result;
-          }
-    
+      
+      while($row = mysql_fetch_array($result))
+        {
+          if($row['numero_cuenta']!="")
+            $ArrayResults[] = array ( 'numero_cuenta' => $row['numero_cuenta']);
+
+        }
+        
+            return $ArrayResults;
+
+       }
+       
+       
+       else
+       return constant('DB_ERROR');
+
       }
 
       public function ConsultaTransacciones($telefono,$servicio,$origen,$imei,$fechahora,$fechainicio,$fechafin) {
-        $sql="SELECT * FROM venta WHERE fecha_hora BETWEEN '".$fechainicio."' AND '".$fechafin."' && imei= '".$imei."'";
+        $sql="SELECT * FROM venta WHERE fecha_hora BETWEEN '".$fechainicio."' AND '".$fechafin."' AND imei= '".$imei."'";
         $result = mysql_query($sql);
-        echo($sql);
+        
         $no_of_rows = mysql_num_rows($result);
         if($no_of_rows > 0){
-        $result = mysql_fetch_array($result);
-         return $result;
-          }
+        
+      
+      while($row = mysql_fetch_array($result))
+        {
+          if($row['UID']!=""&&$row['fecha_hora']!=""&&$row['telefono_recarga']!=""&&$row['monto']!=""&&$row['producto']!="")
+            $ArrayResults[] = array ( 'id' => $row['UID'], 'fecha_hora' => $row['fecha_hora'], 'numero' => $row['telefono_recarga'], 'monto' => $row['monto'], 'producto' => $row['producto'] );
+
+        }
+        
+            return $ArrayResults;
+
        }
+       
+       
+       else
+       return constant('DB_ERROR');
+
+      }          
+       
       
       
       
