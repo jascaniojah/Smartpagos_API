@@ -197,9 +197,9 @@ public function  SaldoOperador($usuario, $imei){
         return constant('DB_ERROR');
         }  
       
-      public function CargarCuentas(){
-        $result = mysql_query("SELECT * FROM cuenta_bancaria");
-
+      public function ConsultaBancos($telefono,$servicio,$origen,$imei,$fechahora){
+        $sql="SELECT distinct banco FROM cuenta_bancaria";
+        $result = mysql_query($sql);
         $no_of_rows = mysql_num_rows($result);
     
     if($no_of_rows > 0){
@@ -208,6 +208,48 @@ public function  SaldoOperador($usuario, $imei){
           }
     
       }
+       public function ConsultaProductos($telefono,$servicio,$origen,$imei,$fechahora){
+        $sql="SELECT * FROM productos";
+        $result = mysql_query($sql);
+        $no_of_rows = mysql_num_rows($result);
+    
+    if($no_of_rows > 0){
+      $result = mysql_fetch_array($result);
+      return $result;
+          }
+    
+      }
+      
+      
+      
+      
+        public function ConsultaCuentas($telefono,$servicio,$origen,$imei,$fechahora,$codigo_banco){
+        $sql="SELECT banco,numero_cuenta,codigo_banco FROM cuenta_bancaria where codigo_banco='".$codigo_banco."'";
+        $result = mysql_query($sql);
+        $no_of_rows = mysql_num_rows($result);
+    
+    if($no_of_rows > 0){
+      $result = mysql_fetch_array($result);
+      return $result;
+          }
+    
+      }
+
+      public function ConsultaTransacciones($telefono,$servicio,$origen,$imei,$fechahora,$fechainicio,$fechafin) {
+        $sql="SELECT * FROM venta WHERE fecha_hora BETWEEN '".$fechainicio."' AND '".$fechafin."' && imei= '".$imei."'";
+        $result = mysql_query($sql);
+        echo($sql);
+        $no_of_rows = mysql_num_rows($result);
+        if($no_of_rows > 0){
+        $result = mysql_fetch_array($result);
+         return $result;
+          }
+       }
+      
+      
+      
+      
+      
   /**
      * Checks whether the email is valid or fake
      */

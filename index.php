@@ -165,26 +165,60 @@ elseif ($tag=="notificacion") {
     
 }
 
+elseif ($tag =="cuentas"){
+    $telefono=$_POST['telefono'];
+    $servicio=$_POST['servicio'];
+    $origen=$_POST['origen'];
+    $imei=$_POST['imei'];
+    $fechahora=$_POST['fechahora'];
+    $codigo_banco=$_POST['codigo_banco'];
+    $cuentas_bancarias = $db ->ConsultaCuentas($telefono,$servicio,$origen,$imei,$fechahora,$codigo_banco);
+    $response["cuentas"]=$cuentas_bancarias;
+    echo json_encode($response); 
+}
+
 elseif ($tag =="bancos"){
-    $cuentas_bancarias = $db ->CargarCuentas();
+    $telefono=$_POST['telefono'];
+    $servicio=$_POST['servicio'];
+    $origen=$_POST['origen'];
+    $imei=$_POST['imei'];
+    $fechahora=$_POST['fechahora'];
+    $cuentas_bancarias = $db ->ConsultaBancos($telefono,$servicio,$origen,$imei,$fechahora);
     $response["bancos"]=$cuentas_bancarias;
+    echo json_encode($response); 
+}
+
+elseif ($tag =="productos"){
+    $telefono=$_POST['telefono'];
+    $servicio=$_POST['servicio'];
+    $origen=$_POST['origen'];
+    $imei=$_POST['imei'];
+    $fechahora=$_POST['fechahora'];
+    $productos = $db ->ConsultaProductos($telefono,$servicio,$origen,$imei,$fechahora);
+    $response["productos"]=$productos;
     echo json_encode($response); 
 }
 
 
 
+elseif($tag=="transacciones")
+{
+    $telefono=$_POST['telefono'];
+    $servicio=$_POST['servicio'];
+    $origen=$_POST['origen'];
+    $imei=$_POST['imei'];
+    $fechahora=$_POST['fechahora'];
+    $fechainicio=$_POST['fechainicio'];
+    $fechafin=$_POST['fechafin'];
 
-
-
-
-
-
-
-
-
-
-
-
+    
+    $transacciones=$db->ConsultaTransacciones($telefono,$servicio,$origen,$imei,$fechahora,$fechainicio,$fechafin);
+    $response["transacciones"]=$transacciones;
+    echo json_encode($transacciones);
+    
+    
+    
+}
 
 
 
@@ -280,7 +314,10 @@ else {
          $response["error_msg"] = "JSON ERROR";
         echo json_encode($response);
     }
-} else {
+} 
+
+
+else {
     echo "by HispanoSoluciones";
 }
 ?>
